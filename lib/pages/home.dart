@@ -1,9 +1,6 @@
 // ignore_for_file: prefer_const_constructors
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:habit_tracker/themes/themeprovider.dart';
-import 'package:provider/provider.dart';
+import 'package:habit_tracker/components/toggle_switch.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -14,14 +11,18 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: Text("HabitTracker"),
         centerTitle: true,
-        actions: <Widget>[
-          CupertinoSwitch(
-            value: Provider.of<ThemeProvider>(context).isDarkMode,
-            onChanged: (value) =>
-                Provider.of<ThemeProvider>(context, listen: false)
-                    .changeTheme(),
-          ),
+        actions: const <Widget>[
+          Toggle(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        child: Icon(
+          Icons.add,
+          color: Theme.of(context).colorScheme.inversePrimary,
+        ),
       ),
     );
   }

@@ -47,4 +47,52 @@ class HabitDatabase extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  Future<void> updateHabitCompletion(int id, bool isCompleted) async {
+    final habit = await isar.habits.get(id);
+
+    if (habit != null) {
+      await isar.writeTxn(() async {
+        if (isCompleted && !habit.completedDays.contains(DateTime.now())) {
+          final today = DateTime.now();
+          habit.completedDays.add(
+            DateTime(
+              today.year,
+              today.month,
+              today.day,
+            ),
+          );
+        } else {
+          habit.completedDays.removeWhere(
+            (date) =>
+                date.year == DateTime.now().year &&
+                date.month == DateTime.now().month &&
+                date.day == DateTime.now().day,
+          );
+        }
+        await isar.habits.put(habit);
+      });
+    }
+    readHabits();
+  }
+
+  Future<void> updateHabit(int id, String newhabitName) async {
+    final habit = await isar.habits.get(id);
+    if (habit != null) {
+      await isar.writeTxn(
+        () async {
+          habit.habitName = newhabitName;
+          await isar.habits.put(habit);
+        },
+      );
+    }
+    readHabits();
+  }
+
+  Future<void> deleteHabit(int id) async {
+    await isar.writeTxn(() async {
+      await isar.habits.delete(id);
+    });
+    readHabits();
+  }
 }
