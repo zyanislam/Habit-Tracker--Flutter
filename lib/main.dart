@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:habit_tracker/database/habit_database.dart';
 import 'package:habit_tracker/pages/home.dart';
 import 'package:habit_tracker/themes/themeprovider.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HabitDatabase.initialize();
+  await HabitDatabase().saveFirstDate();
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
