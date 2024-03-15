@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:habit_tracker/components/toggle_switch.dart';
 import 'package:habit_tracker/database/habit_database.dart';
+import 'package:habit_tracker/models/habit.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -12,6 +13,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    // read the exisiting habits in the database
+    Provider.of<HabitDatabase>(context, listen: false).readHabits();
+
+    super.initState();
+  }
+
   final TextEditingController textController = TextEditingController();
 
   void createHabib() {
@@ -65,6 +74,27 @@ class _HomeState extends State<Home> {
           color: Theme.of(context).colorScheme.inversePrimary,
         ),
       ),
+      body: _buildHabitList,
+    );
+  }
+
+  Widget _buildHabitList() {
+    // Habit DB
+    final habitDatabase = context.watch<HabitDatabase>();
+
+    // current habits in the list
+    List<Habit> currentHabits = habitDatabase.currentHabits;
+
+    // return list of habits
+    return ListView.builder(
+      itemCount: currentHabits.length(),
+      itemBuilder: (context, index) {
+        // get each individual habit
+        final habit = currentHabits[index];
+        // check if the habit is completed today
+        bool isCompletedToday = isHabitCompletedToday();
+        // return habit UI
+      },
     );
   }
 }
